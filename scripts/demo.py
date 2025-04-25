@@ -25,7 +25,7 @@ from data_utils.lower_body import part2full, pred2poses, poses2pred, poses2poses
 from visualise.rendering import RenderTool
 
 global device
-device = 'cpu'
+device = 'mps'
 
 def init_model(model_name, model_path, args, config):
     if model_name == 's2g_face':
@@ -156,7 +156,7 @@ global_orient = torch.tensor([3.0747, -0.0158, -0.0152])
 
 
 def infer(g_body, g_face, smplx_model, rendertool, config, args):
-    betas = torch.zeros([1, 300], dtype=torch.float64).to(device)
+    betas = torch.zeros([1, 300], dtype=torch.float32).to(device)
     am = Wav2Vec2Processor.from_pretrained("vitouphy/wav2vec2-xls-r-300m-phoneme")
     am_sr = 16000
     num_sample = args.num_sample
@@ -272,7 +272,7 @@ def main():
     generator_face = init_model(face_model_name, face_model_path, args, config)
 
     print('init smlpx model...')
-    dtype = torch.float64
+    dtype = torch.float32
     model_params = dict(model_path=smplx_path,
                         model_type='smplx',
                         create_global_orient=True,
